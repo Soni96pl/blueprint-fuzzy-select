@@ -1,0 +1,67 @@
+{
+  "name": "blueprint-fuzzy-select",
+  "version": "1.0.0",
+  "description": "Select options using fuzzy search suggestions.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel -d dist/ src/",
+    "test": "mocha --compilers js:babel-core/register --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kuba77/blueprint-select-input.git"
+  },
+  "keywords": [
+    "blueprint",
+    "blueprintjs",
+    "fuzzy",
+    "fuzzysearch",
+    "fuzzy-search",
+    "search",
+    "select",
+    "input",
+    "filter",
+    "suggestions",
+    "react",
+    "component"
+  ],
+  "author": "Jakub Chronowski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kuba77/blueprint-select-input/issues"
+  },
+  "homepage": "https://github.com/Kuba77/blueprint-select-input#readme",
+  "peerDependencies": {
+    "@blueprintjs/core": "^1.4.0",
+    "react": "^15.4.1",
+    "react-addons-css-transition-group": "^15.4.1",
+    "react-dom": "^15.4.1"
+  },
+  "devDependencies": {
+    "@blueprintjs/core": "^1.4.0",
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-formatter-pretty": "^1.1.0",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-react": "^6.8.0",
+    "jsdom": "^9.9.1",
+    "mocha": "^3.2.0",
+    "react": "^15.4.1",
+    "react-addons-css-transition-group": "^15.4.1",
+    "react-addons-test-utils": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-tools": "^0.13.3"
+  },
+  "dependencies": {
+    "fuzzy-search": "^1.4.0"
+  }
+}
