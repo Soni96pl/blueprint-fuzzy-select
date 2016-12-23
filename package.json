@@ -1,6 +1,6 @@
 {
   "name": "blueprint-fuzzy-select",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Select options using fuzzy search suggestions.",
   "main": "dist/index.js",
   "scripts": {
@@ -28,9 +28,9 @@
   "author": "Jakub Chronowski",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Kuba77/blueprint-select-input/issues"
+    "url": "https://github.com/Kuba77/blueprint-fuzzy-select/issues"
   },
-  "homepage": "https://github.com/Kuba77/blueprint-select-input#readme",
+  "homepage": "https://github.com/Kuba77/blueprint-fuzzy-select#readme",
   "peerDependencies": {
     "@blueprintjs/core": "^1.4.0",
     "react": "^15.4.1",
