@@ -1,6 +1,6 @@
 {
   "name": "blueprint-fuzzy-select",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Select options using fuzzy search suggestions.",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kuba77/blueprint-select-input.git"
+    "url": "git+https://github.com/Kuba77/blueprint-fuzzy-select.git"
   },
   "keywords": [
     "blueprint",
