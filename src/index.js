@@ -102,20 +102,20 @@ export default class FuzzySelect extends Component {
   addOption(input) {
     const { onAdd } = this.props;
     const selected = onAdd(input);
-    const state = {
-      suggestions: [],
-      focused: false
-    };
 
     if (selected) {
-      this.setState({ ...{ input, selected }, ...state });
+      this.setState({
+        input,
+        selected,
+        suggestions: [],
+        focused: false
+      });
     } else {
       this.setState({
-        ...{
-          input: '',
-          selected: null,
-        },
-        ...state
+        input: '',
+        selected: null,
+        suggestions: [],
+        focused: false
       });
     }
   }
