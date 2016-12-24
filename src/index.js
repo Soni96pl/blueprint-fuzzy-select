@@ -13,7 +13,10 @@ export default class FuzzySelect extends Component {
     field: PropTypes.string,
     caseSensitive: PropTypes.bool,
     sort: PropTypes.bool,
-    selectOnBlur: PropTypes.bool,
+    selectOnBlur: React.PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.string
+    ]),
     onSelect: PropTypes.func.isRequired,
     onAdd: PropTypes.func,
     onInput: PropTypes.func,
@@ -27,6 +30,7 @@ export default class FuzzySelect extends Component {
     super(props, context);
 
     this.handleFocus = this.handleFocus.bind(this);
+    this.handleKeydown = this.handleKeydown.bind(this);
     this.handleWindowClick = this.handleWindowClick.bind(this);
     this.handleInput = this.handleInput.bind(this);
   }
@@ -40,10 +44,12 @@ export default class FuzzySelect extends Component {
 
   componentDidMount() {
     window.addEventListener('click', this.handleWindowClick, false);
+    window.addEventListener('keydown', this.handleKeydown, false);
   }
 
   componentWillUnmount() {
     window.removeEventListener('click', this.handleWindowClick, false);
+    window.removeEventListener('keydown', this.handleKeydown, false);
   }
 
   handleFocus() {
@@ -59,25 +65,35 @@ export default class FuzzySelect extends Component {
     );
 
     if (!isParent(this.inputWrapper, event.target)) {
-      this.handleBlur();
+      this.handleBlur('Click');
     }
   }
 
-  handleBlur() {
+  handleKeydown(event) {
+    if (event.key === 'Tab') {
+      this.handleBlur('Tab');
+    }
+  }
+
+  handleBlur(action) {
     const { field, selectOnBlur, onAdd, onBlur } = this.props;
     let { input } = this.state;
     const { selected, suggestions } = this.state;
 
     if (onBlur) onBlur();
 
-    if (selectOnBlur && suggestions.length > 0) {
-      this.chooseOption(suggestions[0]);
-    } else if (selectOnBlur && onAdd && input) {
-      this.addOption(input);
-    } else {
-      input = selected ? selected[field] : '';
-      this.setState({ input, focused: false });
+    if ((selectOnBlur === true || selectOnBlur === action) && input) {
+      if (suggestions.length > 0) {
+        this.chooseOption(suggestions[0]);
+        return;
+      } else if (onAdd) {
+        this.addOption(input);
+        return;
+      }
     }
+
+    input = selected ? selected[field] : '';
+    this.setState({ input, focused: false });
   }
 
   handleInput(event) {
