@@ -53,6 +53,13 @@ A function to perform when user selects an option.
 `needle` is a selected option out of `haystack`.
 
 ---
+**onAdd(input)** *(type: `function`)
+
+A function to perform when users adds a new option.  
+Should return a new option based on an input. 
+If not specified adding new options will be disabled.
+
+---
 **onInput(input)** *(type: `function`)*
 
 A function to perform when user inputs a text.
