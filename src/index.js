@@ -13,6 +13,7 @@ export default class FuzzySelect extends Component {
     field: PropTypes.string,
     caseSensitive: PropTypes.bool,
     sort: PropTypes.bool,
+    selectOnBlur: PropTypes.bool,
     onSelect: PropTypes.func.isRequired,
     onAdd: PropTypes.func,
     onInput: PropTypes.func,
@@ -26,7 +27,7 @@ export default class FuzzySelect extends Component {
     super(props, context);
 
     this.handleFocus = this.handleFocus.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
+    this.handleWindowClick = this.handleWindowClick.bind(this);
     this.handleInput = this.handleInput.bind(this);
   }
 
@@ -38,11 +39,11 @@ export default class FuzzySelect extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('click', this.handleBlur, false);
+    window.addEventListener('click', this.handleWindowClick, false);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('click', this.handleBlur, false);
+    window.removeEventListener('click', this.handleWindowClick, false);
   }
 
   handleFocus() {
@@ -52,17 +53,29 @@ export default class FuzzySelect extends Component {
     this.setState({ input: '', focused: true });
   }
 
-  handleBlur(event) {
-    const { field, onBlur } = this.props;
-    const { selected } = this.state;
+  handleWindowClick(event) {
     const isParent = (reference, target) => (
       target === reference || (target.parentNode && isParent(reference, target.parentNode))
     );
 
     if (!isParent(this.inputWrapper, event.target)) {
-      if (onBlur) onBlur();
+      this.handleBlur();
+    }
+  }
 
-      const input = selected ? selected[field] : '';
+  handleBlur() {
+    const { field, selectOnBlur, onAdd, onBlur } = this.props;
+    let { input } = this.state;
+    const { selected, suggestions } = this.state;
+
+    if (onBlur) onBlur();
+
+    if (selectOnBlur && suggestions.length > 0) {
+      this.chooseOption(suggestions[0]);
+    } else if (selectOnBlur && onAdd && input) {
+      this.addOption(input);
+    } else {
+      input = selected ? selected[field] : '';
       this.setState({ input, focused: false });
     }
   }

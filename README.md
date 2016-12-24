@@ -42,6 +42,11 @@ Indicates whether comparisons should be case sensitive.
 Indicates whether results will sort by best match.
 
 ---
+**selectOnBlur** *(type: `bool`, default: `false`)*
+
+Indicates whether the first option should be selected on blur.
+
+---
 **onSelect(needle)** *(type: `function`, required)*
 
 A function to perform when user selects an option.  
