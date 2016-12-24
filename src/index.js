@@ -14,6 +14,7 @@ export default class FuzzySelect extends Component {
     caseSensitive: PropTypes.bool,
     sort: PropTypes.bool,
     onSelect: PropTypes.func.isRequired,
+    onAdd: PropTypes.func,
     onInput: PropTypes.func,
     onSuggestions: PropTypes.func,
     onFocus: PropTypes.func,
@@ -38,16 +39,6 @@ export default class FuzzySelect extends Component {
 
   componentDidMount() {
     window.addEventListener('click', this.handleBlur, false);
-
-    const { haystack, field, caseSensitive, sort } = this.props;
-    const keys = field ? [field] : [];
-    this.searcher = new FuzzySearch(haystack, keys, { caseSensitive, sort });
-  }
-
-  componentDidUpdate() {
-    const { haystack, field, caseSensitive, sort } = this.props;
-    const keys = field ? [field] : [];
-    this.searcher = new FuzzySearch(haystack, keys, { caseSensitive, sort });
   }
 
   componentWillUnmount() {
@@ -79,11 +70,21 @@ export default class FuzzySelect extends Component {
   handleInput(event) {
     const { onInput, onSuggestions } = this.props;
     const input = event.target.value;
-    const suggestions = this.searcher.search(input);
+    const suggestions = this.search(input);
     if (onInput) onInput(input);
     if (onSuggestions) onSuggestions(suggestions);
 
     this.setState({ input, suggestions });
+  }
+
+  search(input) {
+    const { haystack, field, caseSensitive, sort } = this.props;
+    const keys = field ? [field] : [];
+    if (haystack.length > 0) {
+      this.searcher = new FuzzySearch(haystack, keys, { caseSensitive, sort });
+      return this.searcher.search(input);
+    }
+    return [];
   }
 
   chooseOption(selected) {
@@ -98,8 +99,29 @@ export default class FuzzySelect extends Component {
     });
   }
 
+  addOption(input) {
+    const { onAdd } = this.props;
+    const selected = onAdd(input);
+    const state = {
+      suggestions: [],
+      focused: false
+    };
+
+    if (selected) {
+      this.setState({ ...{ input, selected }, ...state });
+    } else {
+      this.setState({
+        ...{
+          input: '',
+          selected: null,
+        },
+        ...state
+      });
+    }
+  }
+
   render() {
-    const { field } = this.props;
+    const { field, onAdd } = this.props;
     const { input, suggestions, focused } = this.state;
 
     const inputElement = React.cloneElement(
@@ -111,12 +133,15 @@ export default class FuzzySelect extends Component {
       }
     );
 
+    const showNew = onAdd && input;
+    const showSuggestions = suggestions.length > 0;
+
     let suggestionsCount = 0;
 
     return (
       <div className="input-suggest" ref={(div) => this.inputWrapper = div}>
         {inputElement}
-        {focused && suggestions.length > 0 &&
+        {focused && (showNew || showSuggestions) &&
           <Menu className="pt-elevation-1">
             {suggestions.map(suggestion =>
               <MenuItem
@@ -125,6 +150,14 @@ export default class FuzzySelect extends Component {
                 onClick={() => this.chooseOption(suggestion)}
               />
             )}
+            {showNew &&
+              <MenuItem
+                key="suggestion-add-new"
+                text={input}
+                iconName="add"
+                onClick={() => this.addOption(input)}
+              />
+            }
           </Menu>
         }
       </div>
