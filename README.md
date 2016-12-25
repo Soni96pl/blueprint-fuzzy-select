@@ -5,6 +5,12 @@ Blueprint Fuzzy Select is React component intended to extend  [Blueprint's](http
 
 It supports any input as its child but suggestions dropdown uses [Blueprint's](https://github.com/palantir/blueprint) Menu and MenuItem components. 💙
 
+### Install
+```yarn add blueprint-fuzzy-select```
+
+Or if you prefer npm:  
+```npm install blueprint-fuzzy-select```  
+
 ### Usage
 #### Example
 Inside your react component.
