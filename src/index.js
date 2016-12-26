@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import FuzzySearch from 'fuzzy-search';
 
@@ -13,10 +14,11 @@ export default class FuzzySelect extends Component {
     field: PropTypes.string,
     caseSensitive: PropTypes.bool,
     sort: PropTypes.bool,
-    selectOnBlur: React.PropTypes.oneOfType([
+    selectOnBlur: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.string
     ]),
+    selectOnEnter: PropTypes.bool,
     onSelect: PropTypes.func.isRequired,
     onAdd: PropTypes.func,
     onInput: PropTypes.func,
@@ -65,35 +67,73 @@ export default class FuzzySelect extends Component {
     );
 
     if (!isParent(this.inputWrapper, event.target)) {
-      this.handleBlur('Click');
+      this.handleBlur('Click', event);
     }
   }
 
   handleKeydown(event) {
-    if (event.key === 'Tab') {
-      this.handleBlur('Tab');
+    switch (event.key) {
+      case 'Tab':
+        this.handleBlur('Tab', event);
+        break;
+      case 'Enter':
+        this.handleEnter(event);
+        break;
+      default: // pass
     }
   }
 
   handleBlur(action) {
-    const { field, selectOnBlur, onAdd, onBlur } = this.props;
+    const { field, selectOnBlur, onBlur } = this.props;
+    const { focused, selected } = this.state;
     let { input } = this.state;
-    const { selected, suggestions } = this.state;
 
-    if (onBlur) onBlur();
+    if (focused) {
+      if (onBlur) onBlur();
 
-    if ((selectOnBlur === true || selectOnBlur === action) && input) {
-      if (suggestions.length > 0) {
-        this.chooseOption(suggestions[0]);
-        return;
-      } else if (onAdd) {
-        this.addOption(input);
-        return;
+      if (selectOnBlur === true || selectOnBlur === action) {
+        this.selectFirst();
+      } else {
+        input = selected ? selected[field] : '';
+        this.setState({ input, focused: false });
       }
     }
+  }
 
-    input = selected ? selected[field] : '';
-    this.setState({ input, focused: false });
+  handleEnter(event) {
+    const { selectOnEnter } = this.props;
+    const { focused } = this.state;
+
+    if (focused && selectOnEnter) {
+      event.preventDefault();
+      this.selectFirst();
+      this.blurInput();
+    }
+  }
+
+  blurInput() {
+    let inputDOM = this.inputDOM;
+    if (this.inputDOM.tagName === 'input') {
+      inputDOM = this.inputDOM;
+    } else {
+      inputDOM = this.inputDOM.querySelector('input');
+    }
+    inputDOM.blur();
+  }
+
+  selectFirst() {
+    const { onAdd } = this.props;
+    const { input, focused, suggestions } = this.state;
+
+    if (focused && input) {
+      if (suggestions.length > 0) {
+        this.chooseOption(suggestions[0]);
+        return true;
+      } else if (onAdd) {
+        this.addOption(input);
+        return true;
+      }
+    }
   }
 
   handleInput(event) {
@@ -158,7 +198,8 @@ export default class FuzzySelect extends Component {
       {
         onChange: this.handleInput,
         onFocus: this.handleFocus,
-        value: input
+        value: input,
+        ref: ((inputDOM) => this.inputDOM = ReactDOM.findDOMNode(inputDOM))
       }
     );
 

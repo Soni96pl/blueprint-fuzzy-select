@@ -54,6 +54,11 @@ Indicates whether the first option should be selected on blur.
 You can also pass `'Click'` or `'Tab'` to limit behavior.
 
 ---
+**selectOnEnter** *(type: `bool`, default: `false`)*
+
+Indicates wether the first option should be selected on enter.
+
+--- 
 **onSelect(needle)** *(type: `function`, required)*
 
 A function to perform when user selects an option.  
