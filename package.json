@@ -1,6 +1,6 @@
 {
   "name": "blueprint-fuzzy-select",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Select options using fuzzy search suggestions.",
   "main": "dist/index.js",
   "scripts": {
