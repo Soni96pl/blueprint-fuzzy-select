@@ -11,6 +11,10 @@ export default class FuzzySelect extends Component {
         PropTypes.string
       ])
     ).isRequired,
+    selected: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.string
+    ]),
     field: PropTypes.string,
     caseSensitive: PropTypes.bool,
     sort: PropTypes.bool,
@@ -46,14 +50,39 @@ export default class FuzzySelect extends Component {
     focused: false
   }
 
+  componentWillMount() {
+    const { selected } = this.props;
+    if (selected !== undefined) {
+      this.setState({ selected });
+      this.resetInput(selected);
+    }
+  }
+
   componentDidMount() {
     window.addEventListener('click', this.handleWindowClick, false);
     window.addEventListener('keydown', this.handleKeydown, false);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { selected } = nextProps;
+    if (selected !== undefined) this.setState({ selected });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.selected !== nextState.selected) {
+      this.resetInput(nextState.selected);
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener('click', this.handleWindowClick, false);
     window.removeEventListener('keydown', this.handleKeydown, false);
+  }
+
+  resetInput(selected = this.state.selected) {
+    const { field } = this.props;
+    const input = selected ? selected[field] : '';
+    this.setState({ input });
   }
 
   handleFocus() {
@@ -86,9 +115,8 @@ export default class FuzzySelect extends Component {
   }
 
   handleBlur(action) {
-    const { field, selectOnBlur, onBlur } = this.props;
-    const { focused, selected } = this.state;
-    let { input } = this.state;
+    const { selectOnBlur, onBlur } = this.props;
+    const { focused } = this.state;
 
     if (focused) {
       if (onBlur) onBlur();
@@ -96,8 +124,8 @@ export default class FuzzySelect extends Component {
       if (selectOnBlur === true || selectOnBlur === action) {
         this.selectFirst();
       } else {
-        input = selected ? selected[field] : '';
-        this.setState({ input, focused: false });
+        this.resetInput();
+        this.setState({ focused: false });
       }
     }
   }

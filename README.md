@@ -32,6 +32,11 @@ Inside your react component.
 Array of objects or strings containing the search list.
 
 ---
+**selected** *(type: `object` or `string`)*
+
+A selected option. If provided the component will behave in a controlled manner. 🎉
+
+---
 **field** *(type: `string`)*
 
 A name of the property to use for searching in `haystack` objects.  
