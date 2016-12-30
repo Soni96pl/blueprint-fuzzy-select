@@ -226,8 +226,7 @@ export default class FuzzySelect extends Component {
       >
         {inputElement}
         {focused && (showNew || showSuggestions) &&
-          <Menu
-            className="pt-elevation-1"
+          <div
             style={{
               position: 'absolute',
               top: '100%',
@@ -235,22 +234,24 @@ export default class FuzzySelect extends Component {
               left: '1px'
             }}
           >
-            {suggestions.map(suggestion =>
-              <MenuItem
-                key={`suggestion-${suggestionsCount += 1}`}
-                text={field ? suggestion[field] : suggestion}
-                onClick={() => this.chooseOption(suggestion)}
-              />
-            )}
-            {showNew &&
-              <MenuItem
-                key="suggestion-add-new"
-                text={input}
-                iconName="add"
-                onClick={() => this.addOption(input)}
-              />
-            }
-          </Menu>
+            <Menu className="pt-elevation-1">
+              {suggestions.map(suggestion =>
+                <MenuItem
+                  key={`suggestion-${suggestionsCount += 1}`}
+                  text={field ? suggestion[field] : suggestion}
+                  onClick={() => this.chooseOption(suggestion)}
+                />
+              )}
+              {showNew &&
+                <MenuItem
+                  key="suggestion-add-new"
+                  text={input}
+                  iconName="add"
+                  onClick={() => this.addOption(input)}
+                />
+              }
+            </Menu>
+          </div>
         }
       </div>
     );
