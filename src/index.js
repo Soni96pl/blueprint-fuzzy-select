@@ -192,8 +192,9 @@ export default class FuzzySelect extends Component {
   }
 
   render() {
-    const { field, onAdd, style } = this.props;
-    let { className } = this.props;
+    const { field, onAdd } = this.props;
+    let { className, style } = this.props;
+
     const { input, suggestions, focused } = this.state;
 
     const inputElement = React.cloneElement(
@@ -207,6 +208,10 @@ export default class FuzzySelect extends Component {
     );
 
     className = className ? `${className} input-suggest` : 'input-suggest';
+    style = {
+      ...{ position: 'relative' },
+      ...style
+    };
 
     const showNew = onAdd && input;
     const showSuggestions = suggestions.length > 0;
@@ -221,7 +226,15 @@ export default class FuzzySelect extends Component {
       >
         {inputElement}
         {focused && (showNew || showSuggestions) &&
-          <Menu className="pt-elevation-1">
+          <Menu
+            className="pt-elevation-1"
+            style={{
+              position: 'absolute',
+              top: '100%',
+              right: '1px',
+              left: '1px'
+            }}
+          >
             {suggestions.map(suggestion =>
               <MenuItem
                 key={`suggestion-${suggestionsCount += 1}`}
